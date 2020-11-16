@@ -111,5 +111,30 @@ namespace EmployeePayrollProblem_RestSharp
                 Console.WriteLine(response.Content);
             }
         }
+        /// <summary>
+        /// UC4 Ability to update the salary into the json file in json server
+        /// </summary>
+        [TestMethod]
+        public void OnCallingPutAPI_ReturnEmployeeObject()
+        {
+            //Arrange
+            //Initialize the request for PUT to add new employee
+            RestRequest request = new RestRequest("/Employees/8", Method.PUT);
+            JsonObject jsonObj = new JsonObject();
+            jsonObj.Add("name", "Radha");
+            jsonObj.Add("salary", "65000");
+            //Added parameters to the request object such as the content-type and attaching the jsonObj with the request
+            request.AddParameter("application/json", jsonObj, ParameterType.RequestBody);
+
+            //Act
+            IRestResponse response = client.Execute(request);
+
+            //Assert
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            Employee employee = JsonConvert.DeserializeObject<Employee>(response.Content);
+            Assert.AreEqual("Radha", employee.Name);
+            Assert.AreEqual("65000", employee.Salary);
+            Console.WriteLine(response.Content);
+        }
     }
 }
